@@ -14,7 +14,7 @@
     <name>sidekick-test-mode</name>
     <description>Sidekick Test Mode App</description>
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
 
         <thundra.swark.version>0.0.5</thundra.swark.version>
         <springdoc-version>1.6.12</springdoc-version>
