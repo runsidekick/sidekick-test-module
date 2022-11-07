@@ -9,6 +9,9 @@ import java.util.List;
  * @author yasin.kalafat
  */
 public interface EventService {
+
+    List<String> getEvents(EventType eventType);
+
     List<String> getEvents(EventType eventType, EventRequest eventRequest);
 
     void flush(EventType eventType);

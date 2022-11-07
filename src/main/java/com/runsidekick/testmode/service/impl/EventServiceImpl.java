@@ -6,6 +6,7 @@ import com.runsidekick.testmode.service.EventService;
 import com.runsidekick.testmode.store.EventStore;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -19,10 +20,20 @@ public class EventServiceImpl implements EventService {
     private final EventStore eventStore;
 
     @Override
-    public List<String> getEvents(EventType eventType, EventRequest eventRequest) {
-        return eventStore.get(eventType, eventRequest.getAppName(),
-                eventRequest.getFileName(), eventRequest.getLineNo());
+    public List<String> getEvents(EventType eventType) {
+        return eventStore.get(eventType);
     }
+
+    @Override
+    public List<String> getEvents(EventType eventType, EventRequest eventRequest) {
+        List<String> events = eventStore.get(eventType, eventRequest.getAppName(),
+                eventRequest.getFileName(), eventRequest.getLineNo());
+        if (StringUtils.hasText(eventRequest.getTag())) {
+
+        }
+        return events;
+    }
+
 
     @Override
     public void flush(EventType eventType) {

@@ -57,11 +57,11 @@ public class EventController {
 
     @PostMapping("/errorstack")
     public ResponseEntity<List<String>> getErrorStackSnapshotEvents(
-            @RequestHeader(API_KEY_HEADER) String apiKey, @RequestBody EventRequest eventRequest) {
+            @RequestHeader(API_KEY_HEADER) String apiKey) {
         if (!apiKey.equals(this.apiKey)) {
             return status(HttpStatus.UNAUTHORIZED).build();
         }
-        return ok(eventService.getEvents(ERROR_STACK_SNAPSHOT, eventRequest));
+        return ok(eventService.getEvents(ERROR_STACK_SNAPSHOT));
     }
 
     @PostMapping("/flush")

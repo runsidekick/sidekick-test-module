@@ -15,4 +15,5 @@ public class EventRequest {
     private String fileName;
     @NonNull
     private int lineNo;
+    private String tag;
 }
