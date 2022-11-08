@@ -11,13 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 /**
  * @author yasin.kalafat
  */
 @Component
-@RequiredArgsConstructor
 public class EventStoreImpl implements EventStore {
 
     private final Map<EventType, Map<String, List<String>>> eventMap = new ConcurrentHashMap<>();
