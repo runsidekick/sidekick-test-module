@@ -2,9 +2,9 @@ server:
   port: 80
 sidekick:
   broker:
-    host: wss://broker.service.runsidekick.me
-    port: 443
+    host: ws://127.0.0.1
+    port: 7777
   rest:
-    apikey: test
-  apikey: dceec4b5-90ac-438c-bc81-c7fe1b0b8ed2
-  apitoken: 38f99e83-0e53-11ed-b156-0a019d0faa09
+    apikey: apikey
+  apikey: apikey
+  apitoken: apiToken
