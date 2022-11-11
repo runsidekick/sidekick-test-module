@@ -5,6 +5,6 @@ sidekick:
     host: ws://127.0.0.1
     port: 7777
   rest:
-    apikey: da7038c8-37cd-4237-8d17-7e00ae1e04d7
-  apikey: da7038c8-37cd-4237-8d17-7e00ae1e04d7
-  apitoken: da7038c8-37cd-4237-8d17-7e00ae1e04d7
+    apikey: apikey
+  apikey: apikey
+  apitoken: apiToken

@@ -9,10 +9,11 @@ import java.util.List;
  */
 public interface EventStore {
 
+    List<String> get(EventType eventType);
+
     List<String> get(EventType eventType, String appName, String fileName, int lineNo);
 
     void save(EventType eventType, String appName, String fileName, int lineNo, String event);
 
     void flush(EventType eventType);
-
 }

@@ -9,7 +9,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.runsidekick.testmode.broker.handler.event.EventContext;
 import com.runsidekick.testmode.broker.handler.event.EventHandler;
 import com.runsidekick.testmode.broker.handler.message.MessageHandler;
+import com.runsidekick.testmode.broker.handler.response.ResponseHandler;
 import com.runsidekick.testmode.broker.model.event.Event;
+import com.runsidekick.testmode.broker.model.response.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -27,7 +29,9 @@ public class MessageHandlerImpl implements MessageHandler {
     private static final Logger logger = LogManager.getLogger(MessageHandlerImpl.class);
 
     private static final String MESSAGE_EVENT_TYPE = "Event";
+    private static final String MESSAGE_RESPONSE_TYPE = "Response";
     private final Map<String, EventHandler> eventHandlerMap = new HashMap<>();
+    private final Map<String, ResponseHandler> responseHandlerMap = new HashMap<>();
 
     private final ObjectMapper objectMapper =
             new ObjectMapper().
@@ -36,9 +40,13 @@ public class MessageHandlerImpl implements MessageHandler {
                     configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true).
                     configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-    public MessageHandlerImpl(List<EventHandler> eventHandlers) {
+    public MessageHandlerImpl(List<EventHandler> eventHandlers,
+                              List<ResponseHandler> responseHandlers) {
         for (EventHandler eventHandler : eventHandlers) {
             eventHandlerMap.put(eventHandler.getEventName(), eventHandler);
+        }
+        for (ResponseHandler responseHandler : responseHandlers) {
+            responseHandlerMap.put(responseHandler.getResponseName(), responseHandler);
         }
     }
 
@@ -48,9 +56,22 @@ public class MessageHandlerImpl implements MessageHandler {
         try {
             jsonNode = objectMapper.readTree(message);
             String type = extractStringProp(jsonNode, "type");
+            String name = extractStringProp(jsonNode, "name");
             if (MESSAGE_EVENT_TYPE.equalsIgnoreCase(type)) {
-                String eventName = extractStringProp(jsonNode, "name");
-                handleWithEventHandler(eventHandlerMap.get(eventName), message, new EventContext());
+                handleWithEventHandler(eventHandlerMap.get(name), message, new EventContext());
+            } else if (MESSAGE_RESPONSE_TYPE.equals(type)) {
+                ResponseHandler responseHandler = responseHandlerMap.get(name);
+                if (responseHandler != null) {
+                    Response response = (Response) objectMapper.readValue(message, responseHandler.getResponseClass());
+                    try {
+                        responseHandler.handleResponse(response);
+                    } catch (Throwable t) {
+                        logger.error("Error occurred while handling response for message with name {}: {}", name, message);
+                    }
+                } else {
+                    logger.warn("No response handler could be found for message with name {}: {}", name, message);
+                }
+
             }
         } catch (Exception e) {
             logger.warn("Unable to parse message: " + message, e);
@@ -60,9 +81,11 @@ public class MessageHandlerImpl implements MessageHandler {
 
     private void handleWithEventHandler(EventHandler eventHandler, String messageRaw, EventContext context)
             throws JsonProcessingException {
-        Event event = (Event) objectMapper.readValue(messageRaw, eventHandler.getEventClass());
-        context.setRawMessage(messageRaw);
-        eventHandler.handleEvent(event, context);
+        if (eventHandler != null) {
+            Event event = (Event) objectMapper.readValue(messageRaw, eventHandler.getEventClass());
+            context.setRawMessage(messageRaw);
+            eventHandler.handleEvent(event, context);
+        }
     }
 
 

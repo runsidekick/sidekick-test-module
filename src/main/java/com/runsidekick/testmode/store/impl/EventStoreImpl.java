@@ -2,6 +2,7 @@ package com.runsidekick.testmode.store.impl;
 
 import com.runsidekick.testmode.broker.model.event.EventType;
 import com.runsidekick.testmode.store.EventStore;
+import com.runsidekick.testmode.util.GitHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +16,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author yasin.kalafat
  */
 @Component
-@RequiredArgsConstructor
 public class EventStoreImpl implements EventStore {
 
     private final Map<EventType, Map<String, List<String>>> eventMap = new ConcurrentHashMap<>();
@@ -25,6 +25,14 @@ public class EventStoreImpl implements EventStore {
         eventMap.put(EventType.TRACEPOINT_SNAPSHOT, new ConcurrentHashMap<>());
         eventMap.put(EventType.LOGPOINT, new ConcurrentHashMap<>());
         eventMap.put(EventType.ERROR_STACK_SNAPSHOT, new ConcurrentHashMap<>());
+    }
+
+    @Override
+    public List<String> get(EventType eventType) {
+        List<String> events = new ArrayList<>();
+        Map<String, List<String>> map = eventMap.get(eventType);
+        map.values().forEach(list -> events.addAll(list));
+        return events;
     }
 
     @Override
@@ -51,6 +59,6 @@ public class EventStoreImpl implements EventStore {
     }
 
     private String getEventKey(String appName, String fileName, int lineNo) {
-        return appName + "::" + fileName + "::" + lineNo;
+        return appName + "::" + GitHelper.normalizeFileName(fileName) + "::" + lineNo;
     }
 }
