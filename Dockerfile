@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine
+FROM openjdk:11-jdk-slim
 RUN mkdir -p /sidekick-test-mode
 ARG JAR_FILE
 ADD ${JAR_FILE} sidekick-test-mode/
