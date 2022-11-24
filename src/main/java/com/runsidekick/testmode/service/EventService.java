@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface EventService {
 
-    List<String> getEvents(EventType eventType);
+    List<String> getEvents(EventType eventType, String appName);
 
     List<String> getEvents(EventType eventType, EventRequest eventRequest);
 

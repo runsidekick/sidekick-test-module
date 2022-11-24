@@ -57,9 +57,9 @@ public class EventController {
         return ok(eventService.getEventsByTag(LOGPOINT, eventRequest, tag));
     }
 
-    @GetMapping("/errorstack")
-    public ResponseEntity<List<String>> getErrorStackSnapshotEvents() {
-        return ok(eventService.getEvents(ERROR_STACK_SNAPSHOT));
+    @GetMapping("/errorstack/{appName}")
+    public ResponseEntity<List<String>> getErrorStackSnapshotEvents(@PathVariable(required = false) String appName) {
+        return ok(eventService.getEvents(ERROR_STACK_SNAPSHOT, appName));
     }
 
     @PostMapping("/referenceevent/{probeName}")

@@ -37,8 +37,8 @@ public class EventServiceImpl implements EventService {
     private final ProbeStore probeStore;
 
     @Override
-    public List<String> getEvents(EventType eventType) {
-        return eventStore.get(eventType);
+    public List<String> getEvents(EventType eventType, String appName) {
+        return eventStore.get(eventType, appName);
     }
 
     @Override

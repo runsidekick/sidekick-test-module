@@ -91,12 +91,12 @@ public class Broker {
                 try {
                     fetchTracePoints();
                 } catch (Exception e) {
-                    logger.info("Fetch tracePoints failed", e);
+                    logger.error("Fetch tracePoints failed", e);
                 }
                 try {
                     fetchLogPoints();
                 } catch (Exception e) {
-                    logger.info("Fetch logPoints failed", e);
+                    logger.error("Fetch logPoints failed", e);
                 }
             }
         }, 0, PROBE_FETCH_SCHEDULE_INTERVAL, TimeUnit.SECONDS);
