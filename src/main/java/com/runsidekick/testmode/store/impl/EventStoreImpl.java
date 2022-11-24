@@ -28,10 +28,14 @@ public class EventStoreImpl implements EventStore {
     }
 
     @Override
-    public List<String> get(EventType eventType) {
+    public List<String> get(EventType eventType, String appName) {
         List<String> events = new ArrayList<>();
         Map<String, List<String>> map = eventMap.get(eventType);
-        map.values().forEach(list -> events.addAll(list));
+        for (String key : map.keySet()) {
+            if (key.startsWith(appName + "::")) {
+                events.addAll(map.get(key));
+            }
+        }
         return events;
     }
 

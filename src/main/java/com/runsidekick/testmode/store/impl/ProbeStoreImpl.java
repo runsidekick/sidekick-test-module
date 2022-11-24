@@ -34,7 +34,8 @@ public class ProbeStoreImpl implements ProbeStore {
     public TracePoint getTracePointByProbeName(String probeName) {
         if (tracePoints != null) {
             List<TracePoint> filteredTracePoints = tracePoints.stream()
-                    .filter(tracePoint -> tracePoint.getProbeName().equals(probeName))
+                    .filter(tracePoint -> tracePoint.getProbeName() != null
+                            && tracePoint.getProbeName().equals(probeName))
                     .collect(Collectors.toList());
             return CollectionUtils.isEmpty(filteredTracePoints) ? null : filteredTracePoints.get(0);
         }
@@ -45,7 +46,8 @@ public class ProbeStoreImpl implements ProbeStore {
     public LogPoint getLogPointByProbeName(String probeName) {
         if (logPoints != null) {
             List<LogPoint> filteredLogPoints = logPoints.stream()
-                    .filter(logPoint -> logPoint.getProbeName().equals(probeName))
+                    .filter(logPoint -> logPoint.getProbeName() != null
+                            && logPoint.getProbeName().equals(probeName))
                     .collect(Collectors.toList());
             return CollectionUtils.isEmpty(filteredLogPoints) ? null : filteredLogPoints.get(0);
         }
@@ -55,7 +57,8 @@ public class ProbeStoreImpl implements ProbeStore {
     @Override
     public List<TracePoint> getTracePointsByTag(String tag) {
         List<TracePoint> filteredTracePoints = tracePoints.stream()
-                .filter(tracePoint -> tracePoint.getTags().contains(tag))
+                .filter(tracePoint -> tracePoint.getTags() != null
+                        && tracePoint.getTags().contains(tag))
                 .collect(Collectors.toList());
         return filteredTracePoints;
     }
@@ -63,7 +66,8 @@ public class ProbeStoreImpl implements ProbeStore {
     @Override
     public List<LogPoint> getLogPointsByTag(String tag) {
         List<LogPoint> filteredLogPoints = logPoints.stream()
-                .filter(logPoint -> logPoint.getTags().contains(tag))
+                .filter(logPoint -> logPoint.getTags() != null
+                        && logPoint.getTags().contains(tag))
                 .collect(Collectors.toList());
         return filteredLogPoints;
     }
